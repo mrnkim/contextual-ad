@@ -26,34 +26,56 @@ const RecommendedAds = ({ hashtags, footageVideoId, adsIndexId, selectedFile, se
 
     let newQuery = '';
     const radioInputs = Array.from(searchOptionRef.current?.elements || [])
-      .filter(el => el.getAttribute('type') === 'radio') as HTMLInputElement[];
+    .filter(el => el.getAttribute('type') === 'radio') as HTMLInputElement[];
+    console.log("🚀 > useEffect > radioInputs=", radioInputs)
 
-    if (radioInputs[0]?.checked || radioInputs[2]?.checked || radioInputs[3]?.checked) {
+    if (radioInputs[0]?.checked || radioInputs[3]?.checked || radioInputs[4]?.checked) {
       newQuery = hashtags.slice(0, 3).join(' ');
-    } else if (radioInputs[1]?.checked) {
+    } else if (radioInputs[2]?.checked) {
       newQuery = emotions.join(' ');
-    } else if (radioInputs[4]?.checked) {
+    } else if (radioInputs[5]?.checked) {
       newQuery = [...hashtags.slice(0,2), customQueryRef.current?.value].join(' ');
     }
 
     setSearchQuery(newQuery);
 
     let newSearchOptions: SearchOption[] = [];
-    if (radioInputs[0]?.checked || radioInputs[1]?.checked || radioInputs[4]?.checked) {
+    if (radioInputs[0]?.checked || radioInputs[2]?.checked || radioInputs[5]?.checked) {
       newSearchOptions = [
         SearchOption.VISUAL,
         SearchOption.CONVERSATION,
         SearchOption.TEXT_IN_VIDEO,
         SearchOption.LOGO
       ];
-    } else if (radioInputs[2]?.checked) {
-      newSearchOptions = [SearchOption.VISUAL];
     } else if (radioInputs[3]?.checked) {
+      newSearchOptions = [SearchOption.VISUAL];
+    } else if (radioInputs[4]?.checked) {
       newSearchOptions = [SearchOption.CONVERSATION];
     }
 
     setSearchOptions(newSearchOptions);
 
+    const handleEmbeddingSearch = async () => {
+      if (radioInputs[1]?.checked) {
+        try {
+          const response = await fetch('/api/embeddingSearch', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          console.log('Embedding search response:', {
+            status: response.status,
+            data: data
+          });
+        } catch (error) {
+          console.error('Error fetching embedding search:', error);
+        }
+      }
+    };
+
+    handleEmbeddingSearch();
     setIsRecommendClicked(false);
   }, [isRecommendClicked, hashtags, emotions]);
 

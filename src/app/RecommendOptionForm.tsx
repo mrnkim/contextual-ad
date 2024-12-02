@@ -6,7 +6,7 @@ const RecommendOptionForm = ({ searchOptionRef, customQueryRef, setIsRecommendCl
         setHasSearchOptionChanged(true);
       };
 
-      const handleFormSubmit = (e: React.FormEvent) => {
+      const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsRecommendClicked(true);
       };
@@ -17,11 +17,21 @@ return (
                       <input
                         type="radio"
                         name="searchOption"
-                        value="general"
+                        value="hashtags"
                         defaultChecked
                         onChange={handleSearchOptionChange}
                       />
-                      General
+                      Hashtags
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="searchOption"
+                        value="embeddings"
+                        defaultChecked
+                        onChange={handleSearchOptionChange}
+                      />
+                      Embeddings
                     </label>
                     <label className="flex items-center gap-2">
                       <input
